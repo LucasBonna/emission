@@ -1,0 +1,66 @@
+services:
+  zookeeper_emission:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper_emission
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+    networks:
+      - dokploy-network
+
+  kafka_emission:
+    image: bitnami/kafka:latest
+    container_name: kafka_emission
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper_emission:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka_emission:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper_emission
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+
+  db_emission:
+    container_name: db_emission
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: cfemission
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    volumes:
+      - "$HOME/cf-data/postgres/emission:/var/lib/postgresql/data"
+    ports:
+      - "5433:5432"
+    networks:
+      - dokploy-network
+
+  emission-service:
+    container_name: emission-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+      - ./settings.xml:/root/.m2/settings.xml
+    depends_on:
+      - db_emission
+      - kafka_emission
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+
+volumes:
+  cf-data:
+
+networks:
+  dokploy-network:
+    external: true

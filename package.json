@@ -1,0 +1,8 @@
+{
+  "name": "emission",
+  "version": "1.0.0",
+  "private": true,
+  "release": {
+    "branches": ["main", "next"]
+  }
+}

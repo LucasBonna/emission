@@ -1,0 +1,14 @@
+spring:
+  config:
+    import: optional:configserver:http://config-server:8888
+  application:
+    name: emission-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+
+tecnospeed:
+  url: ${TECNOSPEED_URL:https://managersaas.tecnospeed.com.br:8081/ManagerAPIWeb}
+  auth: ${TECNOSPEED_AUTH}

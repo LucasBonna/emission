@@ -1,0 +1,48 @@
+name: Release and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Print Release Version
+        run: |
+          echo "New release version: ${{ steps.semantic.outputs.new_release_version }}"
+
+      - name: Build and Deploy
+        run: mvn deploy -DskipTests --settings .github/workflows/maven-settings.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
+
+      - name: Update pom.xml version
+        if: success()
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic.outputs.new_release_version }} -DgenerateBackupPoms=false
+          mvn versions:commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
