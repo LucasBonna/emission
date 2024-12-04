@@ -1,10 +1,19 @@
 package br.com.contafacil.bonnarotec.emission.domain.xml;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class XMLProcessResult {
-    private final String processedXml;
-    private final BigDecimal icmsValue;
+    private MultipartFile processedXml;
+    private BigDecimal icmsValue;
+    private String chaveNota;
 }

@@ -1,6 +1,5 @@
 package br.com.contafacil.bonnarotec.emission.service;
 
-import br.com.contafacil.bonnarotec.emission.domain.emission.gnre.GNRERequest;
 import br.com.contafacil.bonnarotec.emission.domain.xml.XMLProcessResult;
 import org.springframework.web.multipart.MultipartFile;
 

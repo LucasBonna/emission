@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -15,23 +17,30 @@ import java.util.UUID;
 @DiscriminatorValue("GNRE")
 @Getter
 @Setter
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-public class GNREEmissionEntity extends EmissionEntity {
+@AllArgsConstructor
+public class GNREEmissionEntity extends EmissionEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    private UUID xmlFileId;
+    @Column(nullable = false)
+    private UUID xml;
 
     @Column(nullable = true)
-    private UUID guiaPDFFileId;
+    private UUID pdf;
 
     @Column(nullable = true)
-    private UUID comprovantePDFFileId;
+    private UUID comprovantePDF;
 
+    @Column(nullable = false)
     private BigDecimal guiaAmount;
 
     @Column(nullable = true)
     private String numeroRecibo;
 
+    @Column(nullable = false)
+    private String chaveNota;
+
     @Column(nullable = true)
-    private String chaveGuia;
+    private String codBarrasGuia;
 }

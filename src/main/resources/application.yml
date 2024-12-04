@@ -1,6 +1,8 @@
 spring:
   config:
-    import: optional:configserver:http://config-server:8888
+    import: 
+      - optional:configserver:http://config-server:8888
+      - optional:file:.env[.properties]
   application:
     name: emission-service
 
@@ -12,3 +14,13 @@ eureka:
 tecnospeed:
   url: ${TECNOSPEED_URL:https://managersaas.tecnospeed.com.br:8081/ManagerAPIWeb}
   auth: ${TECNOSPEED_AUTH}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      clientService:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true

@@ -2,6 +2,7 @@ package br.com.contafacil.bonnarotec.emission.controller;
 
 import br.com.contafacil.bonnarotec.emission.domain.emission.EmissionStatus;
 import br.com.contafacil.bonnarotec.emission.domain.emission.gnre.GNREEmissionEntity;
+import br.com.contafacil.bonnarotec.emission.domain.emission.gnre.GNREEmissionResult;
 import br.com.contafacil.bonnarotec.emission.domain.emission.gnre.GNRERequest;
 import br.com.contafacil.bonnarotec.emission.service.GNREService;
 import br.com.contafacil.shared.bonnarotec.toolslib.domain.client.ClientDTO;
@@ -22,8 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,7 +43,7 @@ public class GNREController {
             description = "Realiza a emissao de uma GNRE"
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<GNREEmissionEntity>> issueGNRE(
+    public ResponseEntity<GNREEmissionResult> issueGNRE(
        @Valid @ModelAttribute GNRERequest request,
        @Parameter(hidden = true)
        @RequestHeader(value = "X-Client") String clientJSON,
@@ -55,7 +54,7 @@ public class GNREController {
             ClientDTO client = objectMapper.readValue(clientJSON, ClientDTO.class);
             UserDTO user = objectMapper.readValue(userJSON, UserDTO.class);
 
-            List<GNREEmissionEntity> emissions = gnreService.issueGNRE(request, user, client);
+            GNREEmissionResult emissions = gnreService.issueGNRE(request, user, client);
 
             return new ResponseEntity<>(emissions, HttpStatus.CREATED);
         } catch (JsonProcessingException e) {

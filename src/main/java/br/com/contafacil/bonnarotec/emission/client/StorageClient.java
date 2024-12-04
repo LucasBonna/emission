@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(url = "${spring.storage.service.url}", name = "storage-service")
+@FeignClient(
+    name = "storage-service", 
+    url = "${storage.url}"
+)
 public interface StorageClient {
-
     @PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    FileEntity uploadFile(@RequestPart("file") MultipartFile file);
-
+    FileEntity uploadFile(@RequestPart(value = "file") MultipartFile file);
 }
