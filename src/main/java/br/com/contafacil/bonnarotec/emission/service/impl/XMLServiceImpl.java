@@ -111,6 +111,8 @@ public class XMLServiceImpl implements XMLService {
                         }
                     }
                 }
+            } else {
+               processedXml = null; 
             }
 
             return new XMLProcessResult(processedXml, icmsValue, chaveNota);

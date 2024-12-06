@@ -27,8 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,8 +71,17 @@ public class GNREServiceImpl implements GNREService {
                 Optional<GNREEmissionEntity> existingEmission = gnreEmissionRepository
                     .findByChaveNotaAndStatus(xmlResult.getChaveNota(), EmissionStatus.FINISHED);
                 if (existingEmission.isPresent()) {
-                    log.info("GNRE já emitida para a chave de nota: {}", xmlResult.getChaveNota());
-                    result.addError("GNRE já emitida para esta nota fiscal", xmlResult.getChaveNota());
+                    log.info("GNRE da nota: {} ja emitida", xmlResult.getChaveNota());
+                    result.addError("GNRE da nota: {} ja emitida", xmlResult.getChaveNota());
+                    continue;
+                }
+
+                // Verifica se já existe uma GNRE sendo emitida para esta nota
+                existingEmission = gnreEmissionRepository
+                    .findByChaveNotaAndStatus(xmlResult.getChaveNota(), EmissionStatus.PROCESSING);
+                if (existingEmission.isPresent()) {
+                    log.info("GNRE da nota: {} em processamento", xmlResult.getChaveNota());
+                    result.addError("GNRE da nota: {} em processamento", xmlResult.getChaveNota());
                     continue;
                 }
 
@@ -91,6 +98,7 @@ public class GNREServiceImpl implements GNREService {
                 gnreEmission.setXml(uploadedFile.getId());
                 gnreEmission.setGuiaAmount(xmlResult.getIcmsValue());
                 gnreEmission.setStatus(EmissionStatus.PROCESSING);
+                gnreEmission.setUserId(user.getId());
                 gnreEmission.setCreatedAt(LocalDateTime.now());
                 gnreEmission.setUpdatedAt(LocalDateTime.now());
 
@@ -98,10 +106,7 @@ public class GNREServiceImpl implements GNREService {
                 result.addSuccessfulEmission(savedEmission);
                 log.info("Emissão criada com ID: {}", savedEmission.getId());
 
-                // Cria a mensagem que será enviada para a fila
-                // String xmlContent = xmlResult.getProcessedXml() != null ? 
-                //     xmlResult.getProcessedXml() : new String(xmlFile.getBytes());
-                String xmlContent = new String(xmlResult.getProcessedXml().getBytes());
+                String xmlContent = xmlResult.getProcessedXml() != null ? new String(xmlResult.getProcessedXml().getBytes()) : new String(xmlFile.getBytes());
                 GNREQueueMessage queueMessage = new GNREQueueMessage(savedEmission, xmlContent);
 
                 // Envia a mensagem completa para a fila

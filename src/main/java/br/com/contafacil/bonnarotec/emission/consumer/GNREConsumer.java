@@ -66,6 +66,7 @@ public class GNREConsumer {
                 updateEmissionStatus(emission, EmissionStatus.FAILED, "Cliente não encontrado ou CNPJ não cadastrado");
                 return;
             }
+            
             String response = tecnospeedClient.enviarGNRE(
                 "Basic " + tecnospeedAuth,
                 "ContaFacil",

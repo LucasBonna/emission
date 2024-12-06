@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 @Entity
 @Table(name = "emissions")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -38,6 +37,9 @@ public abstract class EmissionEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private EmissionStatus status;
+
+    @Column(nullable = false)
+    private UUID userId;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
