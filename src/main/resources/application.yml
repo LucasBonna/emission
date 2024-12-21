@@ -24,4 +24,4 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
 
-gateway_url: ${API_GATEWAY_URL:http://localhost:8000}
+gateway_url: ${API_GATEWAY_URL:http://localhost:8040}
