@@ -61,5 +61,5 @@ volumes:
   cf-data:
 
 networks:
-  coolify:
+  dokploy-network:
     external: true
