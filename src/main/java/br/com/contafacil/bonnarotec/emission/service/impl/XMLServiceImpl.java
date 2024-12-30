@@ -46,6 +46,29 @@ public class XMLServiceImpl implements XMLService {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(file.getInputStream());
 
+            String NAMESPACE_URI = "http://www.portalfiscal.inf.br/nfe";
+
+            // Extrair o numero da NFe
+            NodeList cNFList = doc.getElementsByTagName("cNF");
+            if (cNFList.getLength() == 0) {
+                throw new XMLProcessingException("Tag cNF não encontrada no XML");
+            }
+            Element cNF = (Element) cNFList.item(0);
+            String numNota = cNF.getTextContent();
+
+            // Extrair o xNome dentro de <dest>
+            NodeList destList = doc.getElementsByTagNameNS(NAMESPACE_URI, "dest");
+            if (destList.getLength() == 0) {
+                throw new XMLProcessingException("Tag dest não encontrada no XML");
+            }
+            Element dest = (Element) destList.item(0);
+            NodeList xDestList = dest.getElementsByTagNameNS(NAMESPACE_URI, "xNome");
+            if (xDestList.getLength() == 0) {
+                throw new XMLProcessingException("Tag xNome não encontrada dentro de dest no XML");
+            }
+            Element xDest = (Element) xDestList.item(0);
+            String xDestValue = xDest.getTextContent();
+
             // Extrair a chave da NFe
             NodeList chNFeList = doc.getElementsByTagName("chNFe");
             if (chNFeList.getLength() == 0) {
@@ -115,7 +138,7 @@ public class XMLServiceImpl implements XMLService {
                processedXml = null; 
             }
 
-            return new XMLProcessResult(processedXml, icmsValue, chaveNota);
+            return new XMLProcessResult(processedXml, icmsValue, chaveNota, numNota, xDestValue);
 
         } catch (Exception e) {
             log.error("Erro ao processar XML GNRE: ", e);

@@ -16,4 +16,6 @@ public class XMLProcessResult {
     private MultipartFile processedXml;
     private BigDecimal icmsValue;
     private String chaveNota;
+    private String numNota;
+    private String destinatario;
 }

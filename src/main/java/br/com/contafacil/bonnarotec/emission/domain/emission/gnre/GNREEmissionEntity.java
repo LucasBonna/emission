@@ -44,4 +44,9 @@ public class GNREEmissionEntity extends EmissionEntity implements Serializable {
     @Column(nullable = true)
     private String codBarrasGuia;
 
+    @Column(nullable = false)
+    private String numNota;
+
+    @Column(nullable = false)
+    private String destinatario;
 }
