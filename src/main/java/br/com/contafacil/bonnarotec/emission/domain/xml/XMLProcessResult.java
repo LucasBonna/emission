@@ -18,4 +18,5 @@ public class XMLProcessResult {
     private String chaveNota;
     private String numNota;
     private String destinatario;
+    private String cpf_cnpj;
 }

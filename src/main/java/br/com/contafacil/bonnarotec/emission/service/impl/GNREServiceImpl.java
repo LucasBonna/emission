@@ -99,6 +99,9 @@ public class GNREServiceImpl implements GNREService {
                 gnreEmission.setGuiaAmount(xmlResult.getIcmsValue());
                 gnreEmission.setStatus(EmissionStatus.PROCESSING);
                 gnreEmission.setUserId(user.getId());
+                gnreEmission.setDestinatario(xmlResult.getDestinatario());
+                gnreEmission.setNumNota(xmlResult.getNumNota());
+                gnreEmission.setCpfCnpj(xmlResult.getCpf_cnpj());
                 gnreEmission.setCreatedAt(LocalDateTime.now());
                 gnreEmission.setUpdatedAt(LocalDateTime.now());
 

@@ -49,4 +49,7 @@ public class GNREEmissionEntity extends EmissionEntity implements Serializable {
 
     @Column(nullable = false)
     private String destinatario;
+
+    @Column(nullable = false)
+    private String cpfCnpj;
 }

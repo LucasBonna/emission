@@ -69,6 +69,19 @@ public class XMLServiceImpl implements XMLService {
             Element xDest = (Element) xDestList.item(0);
             String xDestValue = xDest.getTextContent();
 
+            // Extrair CPF ou CNPJ
+            String cpfCnpj = null;
+            NodeList cpfList = dest.getElementsByTagNameNS(NAMESPACE_URI, "CPF");
+            NodeList cnpjList = dest.getElementsByTagNameNS(NAMESPACE_URI, "CNPJ");
+
+            if (cpfList.getLength() > 0) {
+                cpfCnpj = cpfList.item(0).getTextContent();
+            } else if (cnpjList.getLength() > 0) {
+                cpfCnpj = cnpjList.item(0).getTextContent();
+            } else {
+                throw new XMLProcessingException("Nem CPF nem CNPJ encontrados dentro de dest no XML");
+            }
+
             // Extrair a chave da NFe
             NodeList chNFeList = doc.getElementsByTagName("chNFe");
             if (chNFeList.getLength() == 0) {
@@ -138,7 +151,7 @@ public class XMLServiceImpl implements XMLService {
                processedXml = null; 
             }
 
-            return new XMLProcessResult(processedXml, icmsValue, chaveNota, numNota, xDestValue);
+            return new XMLProcessResult(processedXml, icmsValue, chaveNota, numNota, xDestValue, cpfCnpj);
 
         } catch (Exception e) {
             log.error("Erro ao processar XML GNRE: ", e);
