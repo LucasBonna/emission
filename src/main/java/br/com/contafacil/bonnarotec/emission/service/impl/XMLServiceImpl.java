@@ -82,6 +82,7 @@ public class XMLServiceImpl implements XMLService {
                 throw new XMLProcessingException("Nem CPF nem CNPJ encontrados dentro de dest no XML");
             }
 
+
             // Extrair a chave da NFe
             NodeList chNFeList = doc.getElementsByTagName("chNFe");
             if (chNFeList.getLength() == 0) {
